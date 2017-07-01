@@ -1,0 +1,3 @@
+morning  reggel
+night  este
+good  jó
