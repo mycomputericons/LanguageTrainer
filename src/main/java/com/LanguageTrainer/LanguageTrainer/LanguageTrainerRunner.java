@@ -17,15 +17,13 @@ import java.util.*;
 @Component
 public class LanguageTrainerRunner implements CommandLineRunner {
 
-//    @Autowired
-//    private Util util;
-
     @Autowired
     private WordBookService wordBookService;
 
     @Override
     public void run(String... args) throws Exception {
 
+        // TODO: parameterize the file
         loadWords("words001.txt");
 
         int wordsCount = wordBookService.size();
@@ -34,13 +32,16 @@ public class LanguageTrainerRunner implements CommandLineRunner {
 
         fillCollection(words, wordsCount);
 
-        ClearScreen();
+
 
         int correctAnswers = 0;
         int badAnswers = 0;
 
+        List<String> inCorrectAnswers = new ArrayList<>();
+
         for (Integer which : words)
         {
+            ClearScreen();
             System.out.println(wordBookService.getFirstByIndex(which));
 
             String input = System.console().readLine();
@@ -53,12 +54,15 @@ public class LanguageTrainerRunner implements CommandLineRunner {
             {
                 badAnswers++;
                 System.out.println("Nope! Correct solution: " + wordBookService.getSecondByIndex(which));
+                inCorrectAnswers.add(wordBookService.getFirstByIndex(which));
+                System.console().readLine();
             }
         }
 
-        System.out.println();
+        ClearScreen();
         System.out.println("Correct answers: " + correctAnswers);
         System.out.println("Incorrect answers: " + badAnswers);
+        System.out.println("These ones: " + inCorrectAnswers.toString());
 
         System.console().reader();
     }
