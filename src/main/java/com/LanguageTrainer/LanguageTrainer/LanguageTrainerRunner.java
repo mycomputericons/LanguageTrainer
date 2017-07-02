@@ -4,13 +4,11 @@ import com.LanguageTrainer.service.WordBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import com.LanguageTrainer.utils.Util;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -54,13 +52,15 @@ public class LanguageTrainerRunner implements CommandLineRunner {
             else
             {
                 badAnswers++;
-                System.out.println("Nope");
+                System.out.println("Nope! Correct solution: " + wordBookService.getSecondByIndex(which));
             }
         }
 
         System.out.println();
         System.out.println("Correct answers: " + correctAnswers);
         System.out.println("Incorrect answers: " + badAnswers);
+
+        System.console().reader();
     }
 
     private void fillCollection(Collection<Integer> collection, int number)
