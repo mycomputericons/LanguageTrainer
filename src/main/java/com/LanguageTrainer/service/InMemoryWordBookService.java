@@ -13,18 +13,30 @@ public class InMemoryWordBookService implements WordBookService {
     @Autowired
     private InMemoryWordBookRepository inMemoryWordBookRepository;
 
-    public InMemoryWordBookService()
-    {
-        inMemoryWordBookRepository = new InMemoryWordBookRepository();
-    }
-
     @Override
     public void add(String first, String second) {
         inMemoryWordBookRepository.add(first, second);
     }
 
     @Override
-    public String get(String which) {
-        return inMemoryWordBookRepository.get(which);
+    public String getByKey(String which) {
+        return inMemoryWordBookRepository.getByKey(which);
     }
+
+    @Override
+    public String getSecondByIndex(int index) {
+        return inMemoryWordBookRepository.getSecondByIndex(index);
+    }
+
+    @Override
+    public String getFirstByIndex(int index) {
+        return inMemoryWordBookRepository.getFirstByIndex(index);
+    }
+
+    @Override
+    public int size() {
+        return inMemoryWordBookRepository.size();
+    }
+
+
 }

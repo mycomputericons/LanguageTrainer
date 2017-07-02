@@ -19,7 +19,22 @@ public class InMemoryWordBookRepository implements WordBookRepository {
     }
 
     @Override
-    public String get(String which) {
+    public String getByKey(String which) {
         return words.get(words.indexOf(which)).getValue();
+    }
+
+    @Override
+    public String getSecondByIndex(int index) {
+        return words.get(index).getValue();
+    }
+
+    @Override
+    public String getFirstByIndex(int index) {
+        return words.get(index).getKey();
+    }
+
+    @Override
+    public int size() {
+        return words.size();
     }
 }

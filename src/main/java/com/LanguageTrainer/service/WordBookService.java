@@ -6,5 +6,11 @@ package com.LanguageTrainer.service;
 public interface WordBookService {
     public void add(String first, String second);
 
-    public String get(String which);
+    public String getByKey(String which);
+
+    public String getSecondByIndex(int index);
+
+    public String getFirstByIndex(int index);
+
+    public int size();
 }
