@@ -24,14 +24,15 @@ public class LanguageTrainerRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // TODO: parameterize the file
-        loadWords("words001.txt");
+        System.out.println("Which input file should we use?");
+        String filename = System.console().readLine();
+        loadWords(filename);
 
         int wordsCount = wordBookService.size();
 
         Stack<Integer> words = new Stack<>();
 
         fillCollection(words, wordsCount);
-
 
 
         int correctAnswers = 0;
@@ -62,7 +63,9 @@ public class LanguageTrainerRunner implements CommandLineRunner {
         ClearScreen();
         System.out.println("Correct answers: " + correctAnswers);
         System.out.println("Incorrect answers: " + badAnswers);
-        System.out.println("These ones: " + inCorrectAnswers.toString());
+        if (badAnswers != 0) {
+            System.out.println("These ones: " + inCorrectAnswers.toString());
+        }
 
         System.console().reader();
     }
@@ -100,7 +103,6 @@ public class LanguageTrainerRunner implements CommandLineRunner {
 
                 lineNumber++;
             }
-
         }
         catch (FileNotFoundException exception)
         {
