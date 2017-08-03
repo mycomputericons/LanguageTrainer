@@ -14,6 +14,8 @@ import java.util.*;
 /**
  * Created by mycomputericons on 7/1/2017.
  */
+// TODO: write logic which permutates the wrongly answered results
+// TODO: organize code, it looks like crap now
 @Component
 public class LanguageTrainerRunner implements CommandLineRunner {
 
@@ -23,7 +25,6 @@ public class LanguageTrainerRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // TODO: parameterize the file
         System.out.println("Which input file should we use?");
         String filename = System.console().readLine();
         loadWords(filename);
@@ -31,6 +32,7 @@ public class LanguageTrainerRunner implements CommandLineRunner {
         int wordsCount = wordBookService.size();
 
         Stack<Integer> words = new Stack<>();
+        Stack<Integer> wrongWords = new Stack<>();
 
         fillCollection(words, wordsCount);
 
@@ -43,10 +45,29 @@ public class LanguageTrainerRunner implements CommandLineRunner {
         for (Integer which : words)
         {
             ClearScreen();
-            System.out.println(wordBookService.getFirstByIndex(which));
+            System.out.println(wordBookService.getSecondByIndex(which));
 
             String input = System.console().readLine();
-            if (input.equals(wordBookService.getSecondByIndex(which)))
+            if (input.equals(wordBookService.getFirstByIndex(which)))
+            {
+                correctAnswers++;
+                continue;
+            }
+            else
+            {
+                System.out.println("Nope! Correct solution: " + wordBookService.getFirstByIndex(which));
+                wrongWords.add(which);
+                System.console().readLine();
+            }
+        }
+
+        for (Integer which : wrongWords)
+        {
+            ClearScreen();
+            System.out.println(wordBookService.getSecondByIndex(which));
+
+            String input = System.console().readLine();
+            if (input.equals(wordBookService.getFirstByIndex(which)))
             {
                 correctAnswers++;
                 continue;
@@ -54,7 +75,8 @@ public class LanguageTrainerRunner implements CommandLineRunner {
             else
             {
                 badAnswers++;
-                System.out.println("Nope! Correct solution: " + wordBookService.getSecondByIndex(which));
+                System.out.println("Nope! Correct solution: " + wordBookService.getFirstByIndex(which));
+                inCorrectAnswers.add(wordBookService.getSecondByIndex(which));
                 inCorrectAnswers.add(wordBookService.getFirstByIndex(which));
                 System.console().readLine();
             }
@@ -68,6 +90,7 @@ public class LanguageTrainerRunner implements CommandLineRunner {
         }
 
         System.console().reader();
+        System.console().readLine();
     }
 
     private void fillCollection(Collection<Integer> collection, int number)
@@ -104,17 +127,9 @@ public class LanguageTrainerRunner implements CommandLineRunner {
                 lineNumber++;
             }
         }
-        catch (FileNotFoundException exception)
-        {
-            System.out.println(exception.getMessage());
-        }
         catch (IOException exception)
         {
             System.out.println("Line cannot be read from file. Error: " + exception.getMessage());
-        }
-        catch (InputMismatchException exception)
-        {
-            System.out.println(exception.getMessage());
         }
         catch (Exception exception)
         {
