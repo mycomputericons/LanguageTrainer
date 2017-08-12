@@ -5,17 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
  * Created by mycomputericons on 7/1/2017.
  */
-// TODO: write logic which permutates the wrongly answered results
-// TODO: organize code, it looks like crap now
 @Component
 public class LanguageTrainerRunner implements CommandLineRunner {
 
@@ -24,23 +19,24 @@ public class LanguageTrainerRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
         System.out.println("Which input file should we use?");
         String filename = System.console().readLine();
         loadWords(filename);
 
         int wordsCount = wordBookService.size();
-
         Stack<Integer> words = new Stack<>();
-        Stack<Integer> wrongWords = new Stack<>();
-
         fillCollection(words, wordsCount);
 
+        askTheWords(words);
 
-        int correctAnswers = 0;
-        int badAnswers = 0;
+        ClearScreen();
+        System.out.println("Congratulations, you have answered all the questions correctly!");
+    }
 
-        List<String> inCorrectAnswers = new ArrayList<>();
+    private void askTheWords(Stack<Integer> words) {
+        Stack<Integer> wrongWords = new Stack<>();
+
+        Collections.shuffle(words);
 
         for (Integer which : words)
         {
@@ -50,7 +46,6 @@ public class LanguageTrainerRunner implements CommandLineRunner {
             String input = System.console().readLine();
             if (input.equals(wordBookService.getFirstByIndex(which)))
             {
-                correctAnswers++;
                 continue;
             }
             else
@@ -61,36 +56,9 @@ public class LanguageTrainerRunner implements CommandLineRunner {
             }
         }
 
-        for (Integer which : wrongWords)
-        {
-            ClearScreen();
-            System.out.println(wordBookService.getSecondByIndex(which));
-
-            String input = System.console().readLine();
-            if (input.equals(wordBookService.getFirstByIndex(which)))
-            {
-                correctAnswers++;
-                continue;
-            }
-            else
-            {
-                badAnswers++;
-                System.out.println("Nope! Correct solution: " + wordBookService.getFirstByIndex(which));
-                inCorrectAnswers.add(wordBookService.getSecondByIndex(which));
-                inCorrectAnswers.add(wordBookService.getFirstByIndex(which));
-                System.console().readLine();
-            }
+        if (!wrongWords.isEmpty()) {
+            askTheWords(wrongWords);
         }
-
-        ClearScreen();
-        System.out.println("Correct answers: " + correctAnswers);
-        System.out.println("Incorrect answers: " + badAnswers);
-        if (badAnswers != 0) {
-            System.out.println("These ones: " + inCorrectAnswers.toString());
-        }
-
-        System.console().reader();
-        System.console().readLine();
     }
 
     private void fillCollection(Collection<Integer> collection, int number)
@@ -107,7 +75,7 @@ public class LanguageTrainerRunner implements CommandLineRunner {
         collection.addAll(randomArray);
     }
 
-    private void loadWords(String filename)
+    private void loadWords(String filename) throws FileNotFoundException
     {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename)))
         {
@@ -127,12 +95,15 @@ public class LanguageTrainerRunner implements CommandLineRunner {
                 lineNumber++;
             }
         }
+        catch (FileNotFoundException exception) {
+            System.out.printf("The file %s cannot be opened.", filename);
+            System.exit(1);
+        }
         catch (IOException exception)
         {
             System.out.println("Line cannot be read from file. Error: " + exception.getMessage());
         }
-        catch (Exception exception)
-        {
+        catch (Exception exception) {
             System.out.println(exception.getMessage());
         }
     }
